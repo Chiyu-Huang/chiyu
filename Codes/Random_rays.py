@@ -28,7 +28,7 @@ def start_end(k_unnorm, b = None, maxb = 25, minb = 5):
 
         #   Define the orthonormal axis on the plane perpendicular to k, cutting
         #   through the centre of the galaxy
-        x_hat = [1, 0, 0]
+        x_hat = [1, 0, 0] 
         x_plane = np.cross(k, x_hat)
         x_plane = x_plane/np.sqrt(x_plane[0]**2 + x_plane[1]**2 + x_plane[2]**2)
         y_hat = [0, 1, 0]
