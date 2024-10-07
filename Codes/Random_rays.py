@@ -25,9 +25,16 @@ def start_end(k_unnorm, b = None, maxb = 25, minb = 5):
             raise Exception('k must have 3 components (x, y, z)')
         kx, ky, kz = k_unnorm
         k = k_unnorm/np.sqrt(kx*kx + ky*ky + kz*kz)
+        print('k', k)
 
         #   Define the orthonormal axis on the plane perpendicular to k, cutting
         #   through the centre of the galaxy
+        if kx == 0:
+            x_plane = [0, 1, 0]
+            y_plane = [0, 0, 1]
+        if ky == 0:
+            x_plane = [1, 0, 0]
+            y_plane = [0, 0, 1]
         x_hat = [1, 0, 0] 
         x_plane = np.cross(k, x_hat)
         x_plane = x_plane/np.sqrt(x_plane[0]**2 + x_plane[1]**2 + x_plane[2]**2)
@@ -35,6 +42,8 @@ def start_end(k_unnorm, b = None, maxb = 25, minb = 5):
         y_plane = np.cross(k, y_hat)
         y_plane = y_plane/np.sqrt(y_plane[0]**2 + y_plane[1]**2 + y_plane[2]**2)
 
+        print('y = ', y_plane)
+        print('x = ', x_plane)
         #   Random point on that plane, used to define the ray as it will 
         #   pass this point. Then also find when it intersects the box.
         impact_param = to_cl(np.random.uniform(minb, maxb))
@@ -42,10 +51,14 @@ def start_end(k_unnorm, b = None, maxb = 25, minb = 5):
         phi = np.random.uniform(0, 2*np.pi)
         x = impact_param*np.cos(phi)
         y = impact_param*np.sin(phi)
+        print(x, y)
+        print('angg = ', np.arccos(np.dot(x_plane, y_plane)/np.sqrt(np.dot(x_plane, x_plane)*np.dot(y_plane,y_plane))))
 
         # Find where ther boundaries of the box is reached
         rand_point = x*x_plane + y*y_plane + np.array([0.5, 0.5, 0.5])
+        print('rand point = ', rand_point)
         rand_point = np.array(rand_point)
+        b_cal = np.sqrt(np.dot((x*x_plane + y*y_plane), (x*x_plane + y*y_plane)))
 
         t0 = np.where(k > 0, -rand_point / k, np.where(k < 0, (1 - rand_point)/k, -1e10))
         t1 = np.where(k > 0, (1-rand_point) / k, np.where(k < 0, -rand_point/k, 1e10))
@@ -72,8 +85,8 @@ def start_end(k_unnorm, b = None, maxb = 25, minb = 5):
                 continue
         else:
             break
-    # print(start, end)
-    return (start, end, np.sqrt(x*x + y*y))
+    print(start, end)
+    return (start, end, b_cal)
 
 def is_close(a, b, th):
     return np.abs(a-b)<th

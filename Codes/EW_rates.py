@@ -53,6 +53,7 @@ def gen_start(inclination, nums):
             k = k_inclination(inclination)
             # print(k)
         start, end, b = Random_rays.start_end(k, maxb = 40, minb = 5)
+        print(to_kpc(b))
         _start_l.append(start)
         _end_l.append(end)
         _b_l.append(b)
@@ -652,13 +653,11 @@ def r_squared(line, mode, file_read, sims):
             stats.linregress((O1dat_log), (rates_log)).stderr
 files = ['SINK_9pc']
 
-# inclinations = np.append(np.arange(0, 35, 4), 90)
-# print(len(inclinations))
-# print(inclinations)
-# (gen_start('rand', 100))
-# for i in inclinations:
-#     print(i)
-#     (gen_start(i, 100))
+# gen_start(90, 1)
+
+start, end, b = Random_rays.start_end([1, 0.5, 0.5], maxb = 40, minb = 5)
+print((b))
+print(np.sqrt((start[2]-0.5)**2 + (start[0]-0.5)**2 + (start[1]-0.5)**2))
 
 #%% Real
 
